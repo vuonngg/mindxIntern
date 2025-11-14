@@ -46,6 +46,10 @@ export default function Header({ user }: HeaderProps) {
       // DO NOT clear token/session here - wait for callback from MindX IdP
       sessionStorage.setItem('logoutInProgress', 'true');
       
+          console.log('id_token_hint là:', idTokenHint);
+      console.log('url chuyển hướng sau khi đăng xuát là là:', postLogoutRedirectUri);
+       console.log('chuyển hướng sau 7s');
+       await new Promise(resolve => setTimeout(resolve, 7000));
       // Step 4: Submit POST form to MindX IdP logout endpoint
       // MindX IdP will clear its session and redirect back to post_logout_redirect_uri
       authService.submitLogoutForm(baseUrl, {

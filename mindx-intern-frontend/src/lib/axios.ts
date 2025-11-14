@@ -4,7 +4,6 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { getTokenString, isTokenExpired, clearToken } from '../services/tokenService';
-import { AUTH_ENDPOINTS } from '../config/apiUrls';
 
 // Create axios instance
 const axiosInstance: AxiosInstance = axios.create({

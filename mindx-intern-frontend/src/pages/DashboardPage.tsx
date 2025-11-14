@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService, type UserData } from '../services/authService';
-import { isTokenExpired } from '../services/tokenService';
 import { trackEvent } from '../lib/analytics';
 import Header from '../components/Header';
 import './DashboardPage.css';

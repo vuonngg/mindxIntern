@@ -69,7 +69,7 @@ export function saveToken(token: string): void {
     const tokenData: TokenData = {
       token,
       expiresAt,
-      decoded,
+      decoded: decoded || undefined,
     };
 
     localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(tokenData));
