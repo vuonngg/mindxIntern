@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: mindxInternBackend
+  
+  # OAuth2 config không cần thiết nữa vì chỉ dùng callback API
+  # Client ID và Secret được sử dụng trực tiếp trong OAuth2TokenExchangeService
+
+  session:
+    timeout: ${SESSION_TIMEOUT:1800}
+    cookie:
+      name: ${SESSION_COOKIE_NAME:JSESSIONID}
+      http-only: true
+      secure: ${SESSION_COOKIE_SECURE:true}
+      same-site: ${SESSION_COOKIE_SAME_SITE:lax}
+
+server:
+  port: 8080
+
+cors:
+  # Allowed origins cho CORS
+  # Frontend redirect URIs được phép:
+  # - https://onboarding.mindx.edu.vn/auth/callback
+  # - http://localhost:3000/auth/callback
+  # - http://localhost:5173/auth/callback
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,http://localhost:8080,https://id-dev.mindx.edu.vn,https://onboarding.mindx.edu.vn}
+
+# Biến môi trường cần thiết:
+# OPENID_CLIENT_ID=mindx-onboarding
+# OPENID_CLIENT_SECRET=your-secret-here
+

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mindx-intern-frontend
+    ports:
+      - "80:80"
+    environment:
+      # Có thể truyền biến môi trường ở đây hoặc qua docker run -e
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-}
+      - VITE_FRONTEND_REDIRECT_URI=${VITE_FRONTEND_REDIRECT_URI:-http://localhost:5173/auth/callback}
+      - VITE_OPENID_CLIENT_ID=${VITE_OPENID_CLIENT_ID:-mindx-onboarding}
+      - VITE_GA_TRACKING_ID=${VITE_GA_TRACKING_ID:-G-LKE75QPRP9}
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+

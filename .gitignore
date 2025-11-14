@@ -1,0 +1,135 @@
+# ============================================
+# GITIGNORE TỔNG HỢP CHO MINDX TEST PROJECT
+# Bao gồm: mindx-intern-frontend + mindxInternBackend
+# ============================================
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+.env.development
+.env.production
+.env.test
+*.env
+
+# ============================================
+# FRONTEND (React/TypeScript/Vite)
+# ============================================
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production builds
+/dist
+/build
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ============================================
+# BACKEND (Java Spring Boot/Maven)
+# ============================================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot config files (except examples)
+application*.yml
+!application.yml.example
+!application.yml.template
+application*.properties
+!application.properties.example
+!application.properties.template
+
+# Local config files
+application-local.yml
+application-dev.yml
+application-prod.yml
+application-staging.yml
+*-local.yml
+*-dev.yml
+*-prod.yml
+*-staging.yml
+
+# ============================================
+# SECRETS & SENSITIVE DATA
+# ============================================
+**/secrets/
+**/config/secrets/
+**/*secret*.yml
+**/*secret*.yaml
+**/*secret*.properties
+**/*key*.yml
+**/*key*.yaml
+**/*key*.properties
+
+# Kubernetes secrets
+**/k8s/secrets/
+**/kubernetes/secrets/
+*-secrets.yml
+*-secrets.yaml
+
+# Firebase
+firebase-adminsdk-*.json
+service-account-*.json
+*-firebase*.json
+
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ============================================
+# LOGS
+# ============================================
+logs/
+*.log
+
+# ============================================
+# TEMPORARY FILES
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# ============================================
+# OS FILES
+# ============================================
+.DS_Store
+Thumbs.db
+*.pem
+

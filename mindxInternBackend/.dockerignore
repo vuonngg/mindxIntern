@@ -1,0 +1,30 @@
+# Maven
+target/
+**/target/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# VCS
+.git/
+.gitignore
+
+# OS
+.DS_Store
+
+# Maven wrapper cache
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# Node (if any frontend folders present)
+node_modules/
+
+

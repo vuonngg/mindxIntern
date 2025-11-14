@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http01-challenge
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/ingress-http01-challenge: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vuonghn.mindx.com.vn
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/XJdumRAASDeXcFIpvo-TdM3F5tsYclmx4NEPrj7y-z8
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cm-acme-http-solver-xv9pz
+                port:
+                  number: 8089
+    - host: api.vuonghn.mindx.com.vn
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/Mkw89Qag42FOWwPwiVfwkoiXxY7DUq_cGtVE4oFhTjQ
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cm-acme-http-solver-5996w
+                port:
+                  number: 8089

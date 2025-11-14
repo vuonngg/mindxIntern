@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vuonghn-fullstack-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  rules:
+    # API subdomain -> Backend
+    - host: api.vuonghn.mindx.com.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mindx-backend-service
+                port:
+                  number: 80
+    # Frontend domain -> Frontend for "/" and Backend for "/api"
+    - host: vuonghn.mindx.com.vn
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: mindx-backend-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mindx-frontend-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - api.vuonghn.mindx.com.vn
+        - vuonghn.mindx.com.vn
+      secretName: vuonghn-tls

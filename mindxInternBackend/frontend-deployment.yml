@@ -1,0 +1,52 @@
+# FILE: frontend-deployment.yml (Cấu trúc ĐẦY ĐỦ)
+
+apiVersion: apps/v1  # <--- Bắt buộc phải có
+kind: Deployment     # <--- Bắt buộc phải có
+metadata:
+  name: mindx-frontend-deployment
+  labels:
+    app: mindx-frontend
+spec: # <--- Bắt buộc phải có
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mindx-frontend
+  template:
+    metadata:
+      labels:
+        app: mindx-frontend
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - name: frontend-container
+          image: anoanoweb.azurecr.io/mindx-frontend:v1.4 # << Đảm bảo tên Image chính xác
+          ports:
+            - containerPort: 80
+          env:
+            # TẤT CẢ CÁC BIẾN ĐỌC TỪ CONFIGMAP (Đã đúng)
+            - name: VITE_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: VITE_API_BASE_URL
+            - name: VITE_FIREBASE_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: VITE_FIREBASE_API_KEY
+            - name: VITE_FIREBASE_AUTH_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: VITE_FIREBASE_AUTH_DOMAIN
+            - name: VITE_FIREBASE_PROJECT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: VITE_FIREBASE_PROJECT_ID
+            - name: VITE_FIREBASE_APP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-config
+                  key: VITE_FIREBASE_APP_ID

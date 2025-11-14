@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vuonghn-tls
+  namespace: default
+spec:
+  secretName: vuonghn-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: vuonghn.mindx.com.vn
+  dnsNames:
+    - vuonghn.mindx.com.vn
+    - api.vuonghn.mindx.com.vn

@@ -1,0 +1,57 @@
+# ----------------------------------------------------
+# GIAI ĐOẠN 1: BUILD (Sử dụng JDK để tạo file JAR)
+# ----------------------------------------------------
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+
+WORKDIR /app
+
+# Sao chép file pom.xml trước để tận dụng Docker cache layer
+COPY pom.xml .
+
+# Tải dependencies để tận dụng cache layer (chỉ chạy lại khi pom.xml thay đổi)
+RUN mvn -q -DskipTests dependency:go-offline || true
+
+# Sao chép mã nguồn
+COPY src ./src
+
+# Build ứng dụng (tạo file JAR)
+RUN mvn -q clean package -DskipTests
+
+# Kiểm tra file JAR đã được tạo
+RUN ls -la target/*.jar || (echo "Build failed: JAR file not found" && exit 1)
+
+# ----------------------------------------------------
+# GIAI ĐOẠN 2: PRODUCTION (Chỉ chứa JRE để chạy)
+# ----------------------------------------------------
+# Sử dụng JRE nhẹ hơn để giảm kích thước image
+FROM eclipse-temurin:17-jre
+
+# Tạo user non-root để chạy ứng dụng (best practice)
+RUN groupadd -r spring && useradd -r -g spring spring
+
+# Định nghĩa port mặc định
+ENV SERVER_PORT=8080
+ENV JAVA_OPTS=""
+
+# Tạo thư mục app và set quyền
+WORKDIR /app
+RUN chown -R spring:spring /app
+
+# Sao chép file JAR đã build từ giai đoạn builder
+COPY --from=builder /app/target/*.jar app.jar
+
+# Set quyền cho file JAR
+RUN chown spring:spring app.jar && chmod 755 app.jar
+
+# Chuyển sang user non-root
+USER spring:spring
+
+# Khai báo port sẽ mở
+EXPOSE 8080
+
+# Health check (sử dụng wget hoặc bỏ nếu không cần)
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+#   CMD wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/api/auth/health || exit 1
+
+# Lệnh chạy ứng dụng. Spring Boot sẽ tự động đọc các biến môi trường hệ thống.
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -jar app.jar"]
