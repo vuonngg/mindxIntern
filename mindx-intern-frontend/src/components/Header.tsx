@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService, type UserData } from '../services/authService';
-import { FRONTEND_REDIRECT_URI } from '../config/apiUrls';
 import { clearToken } from '../services/tokenService';
 import { trackButtonClick, trackLogout } from '../lib/analytics';
 import './Header.css';
@@ -35,34 +34,35 @@ export default function Header({ user }: HeaderProps) {
     
     setLoggingOut(true);
     try {
-      // Step 1: Get logout URL info from backend (GET /api/auth/get-logout)
-      const { baseUrl, idTokenHint } = await authService.getLogoutUrl();
+      // Step 1: Clear frontend session (token, localStorage, cookies)
+      clearToken();
+      localStorage.clear();
       
-      // Step 2: Prepare post_logout_redirect_uri
-      // Use FRONTEND_REDIRECT_URI from environment (same as login callback)
-      const postLogoutRedirectUri = FRONTEND_REDIRECT_URI;
-      
-      // Step 3: Set flag for logout callback detection
-      // DO NOT clear token/session here - wait for callback from MindX IdP
-      sessionStorage.setItem('logoutInProgress', 'true');
-      
-          console.log('id_token_hint là:', idTokenHint);
-      console.log('url chuyển hướng sau khi đăng xuát là là:', postLogoutRedirectUri);
-       console.log('chuyển hướng sau 7s');
-       await new Promise(resolve => setTimeout(resolve, 7000));
-      // Step 4: Submit POST form to MindX IdP logout endpoint
-      // MindX IdP will clear its session and redirect back to post_logout_redirect_uri
-      authService.submitLogoutForm(baseUrl, {
-        id_token_hint: idTokenHint,
-        post_logout_redirect_uri: postLogoutRedirectUri
+      // Clear cookies manually
+      document.cookie.split(";").forEach((c) => {
+        const eqPos = c.indexOf("=");
+        const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim();
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${window.location.hostname}`;
       });
       
-      // Note: After form submission, browser will redirect to MindX IdP
-      // Then MindX IdP will redirect back to post_logout_redirect_uri
-      // The callback handler will detect logoutInProgress flag and complete the logout
+      // Step 2: Call backend to clear Spring Boot session
+      try {
+        await authService.logout();
+      } catch (logoutErr) {
+        // Continue anyway - frontend session is already cleared
+        console.error('Error clearing backend session:', logoutErr);
+      }
+      
+      // Step 3: Set flag to prevent auto-login check
+      sessionStorage.setItem('justLoggedOut', 'true');
+      
+      // Step 4: Redirect to login page
+      navigate('/login', { replace: true });
     } catch (err) {
       console.error('Logout error:', err);
-      // If logout fails, clear everything and redirect to login as fallback
+      // If logout fails, ensure everything is cleared anyway
       clearToken();
       localStorage.clear();
       sessionStorage.clear();
@@ -75,7 +75,7 @@ export default function Header({ user }: HeaderProps) {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       });
       
-      // Fallback: redirect to login page
+      // Redirect to login page
       navigate('/login', { replace: true });
     } finally {
       setLoggingOut(false);
@@ -94,8 +94,8 @@ export default function Header({ user }: HeaderProps) {
     <header className="app-header">
       <div className="header-content">
         <div className="header-logo">
-          <img src="/mindx-logo.svg" alt="MindX" className="header-logo-img" />
-          <span className="header-title">MindX Dashboard</span>
+          <img src="/anoano-logo.svg" alt="Anoano" className="header-logo-img" />
+          <span className="header-title">Anoano</span>
         </div>
         
         <div className="header-user" ref={dropdownRef}>

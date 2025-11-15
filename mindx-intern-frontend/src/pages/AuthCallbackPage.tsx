@@ -129,8 +129,8 @@ export default function AuthCallbackPage() {
           // Clear the OAuth redirect flag
           sessionStorage.removeItem('oauthRedirectInProgress');
           
-          // Redirect to dashboard
-          window.location.href = '/dashboard';
+          // Redirect to student page
+          window.location.href = '/student';
         } else {
           setStatus('error');
           setMessage(response.message || 'Không thể xác thực người dùng');

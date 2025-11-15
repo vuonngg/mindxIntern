@@ -1,8 +1,10 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { AuthPage } from './pages/AuthPage'
-import DashboardPage from './pages/DashboardPage'
+import StudentPage from './pages/StudentPage'
 import AuthCallbackPage from './pages/AuthCallbackPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import PublicRoute from './components/PublicRoute'
@@ -30,11 +32,23 @@ function App() {
   return (
     <BrowserRouter>
       <PageTracker />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         {/* Public routes */}
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         
-        {/* Login page - redirect to dashboard if already authenticated */}
+        {/* Login page - redirect to student if already authenticated */}
         <Route 
           path="/login" 
           element={
@@ -44,28 +58,28 @@ function App() {
           } 
         />
         
-        {/* Protected routes - Dashboard is the default/main page */}
+        {/* Protected routes - Student page is the default/main page */}
         <Route
-          path="/dashboard"
+          path="/student"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <StudentPage />
             </ProtectedRoute>
           }
         />
         
-        {/* Root path - redirect to dashboard (will be protected) */}
+        {/* Root path - redirect to student (will be protected) */}
         <Route
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <StudentPage />
             </ProtectedRoute>
           }
         />
         
-        {/* Catch all - redirect to dashboard */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* Catch all - redirect to student */}
+        <Route path="*" element={<Navigate to="/student" replace />} />
       </Routes>
     </BrowserRouter>
   )

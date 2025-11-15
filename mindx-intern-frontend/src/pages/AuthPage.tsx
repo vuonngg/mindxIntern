@@ -49,8 +49,8 @@ export function AuthPage() {
         <header className="auth-header">
           <div className="auth-logo">
             <img 
-              src="/mindx-logo.svg" 
-              alt="MindX Logo" 
+              src="/anoano-logo.svg" 
+              alt="Anoano Logo" 
               className="mindx-logo"
             />
           </div>
@@ -63,7 +63,7 @@ export function AuthPage() {
           onClick={handleLogin} 
           disabled={loading}
         >
-          <img src="/mindx-logo.svg" alt="" className="button-logo" />
+          <img src="/anoano-logo.svg" alt="" className="button-logo" />
           {loading ? 'Đang tải...' : 'Đăng nhập bằng MindX'}
         </button>
 

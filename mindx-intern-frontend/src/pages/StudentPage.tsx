@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 import { authService, type UserData } from '../services/authService';
 import { 
   getAllStudents, 
@@ -141,7 +143,10 @@ export default function StudentPage() {
     e.preventDefault();
     
     if (!formData.name.trim()) {
-      alert('Vui lòng nhập tên học sinh');
+      toast.warning('Vui lòng nhập tên học sinh', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -155,7 +160,16 @@ export default function StudentPage() {
           action: 'Update',
           label: `Student ID: ${updated.id}`,
         });
+        toast.success('Cập nhật học sinh thành công!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
         handleCloseForm();
+      } else {
+        toast.error('Không thể cập nhật học sinh. Vui lòng thử lại!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
       }
     } else {
       // Create new student
@@ -166,12 +180,31 @@ export default function StudentPage() {
         action: 'Create',
         label: `Student ID: ${newStudent.id}`,
       });
+      toast.success('Thêm học sinh mới thành công!', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       handleCloseForm();
     }
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa học sinh này?')) {
+  const handleDelete = async (id: string) => {
+    const student = students.find(s => s.id === id);
+    const studentName = student?.name || 'học sinh này';
+    
+    const result = await Swal.fire({
+      title: 'Xác nhận xóa',
+      text: `Bạn có chắc chắn muốn xóa học sinh "${studentName}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+      reverseButtons: true,
+    });
+
+    if (result.isConfirmed) {
       const deleted = deleteStudent(id);
       if (deleted) {
         setStudents(getAllStudents());
@@ -179,6 +212,15 @@ export default function StudentPage() {
           category: 'Student',
           action: 'Delete',
           label: `Student ID: ${id}`,
+        });
+        toast.success('Xóa học sinh thành công!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } else {
+        toast.error('Không thể xóa học sinh. Vui lòng thử lại!', {
+          position: 'top-right',
+          autoClose: 3000,
         });
       }
     }

@@ -9,7 +9,7 @@ interface PublicRouteProps {
 
 /**
  * PublicRoute - Prevents authenticated users from accessing public pages (like login)
- * Redirects to dashboard if user is already authenticated
+ * Redirects to student page if user is already authenticated
  */
 export default function PublicRoute({ children }: PublicRouteProps) {
   const location = useLocation();
@@ -46,7 +46,7 @@ export default function PublicRoute({ children }: PublicRouteProps) {
         const response = await authService.checkAuth();
         
         if (response.success && (response.data || response.user)) {
-          // User is authenticated, redirect to dashboard
+          // User is authenticated, redirect to student page
           setIsAuthenticated(true);
           setIsChecking(false);
           return;
@@ -91,8 +91,8 @@ export default function PublicRoute({ children }: PublicRouteProps) {
   }
 
   if (isAuthenticated) {
-    // User is authenticated, redirect to dashboard
-    return <Navigate to="/dashboard" replace />;
+    // User is authenticated, redirect to student page
+    return <Navigate to="/student" replace />;
   }
 
   // User is not authenticated, allow access to public page
