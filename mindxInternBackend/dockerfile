@@ -33,9 +33,26 @@ RUN groupadd -r spring && useradd -r -g spring spring
 ENV SERVER_PORT=8080
 ENV JAVA_OPTS=""
 
+# Azure Application Insights Java Agent version
+ENV APPLICATIONINSIGHTS_AGENT_VERSION=3.4.19
+
+# Azure Application Insights sẽ tự động đọc từ environment variables:
+# - APPLICATIONINSIGHTS_CONNECTION_STRING (ưu tiên)
+# - APPLICATIONINSIGHTS_INSTRUMENTATION_KEY
+# Hoặc từ application.yml qua:
+# - AZURE_APPLICATIONINSIGHTS_CONNECTION_STRING
+# - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATION_KEY
+
 # Tạo thư mục app và set quyền
 WORKDIR /app
 RUN chown -R spring:spring /app
+
+# Download Application Insights Java Agent
+# Agent sẽ tự động instrument code và track requests, exceptions, dependencies
+RUN wget -q -O applicationinsights-agent.jar \
+    https://github.com/microsoft/ApplicationInsights-Java/releases/download/${APPLICATIONINSIGHTS_AGENT_VERSION}/applicationinsights-agent-${APPLICATIONINSIGHTS_AGENT_VERSION}.jar && \
+    chmod 755 applicationinsights-agent.jar && \
+    chown spring:spring applicationinsights-agent.jar
 
 # Sao chép file JAR đã build từ giai đoạn builder
 COPY --from=builder /app/target/*.jar app.jar
@@ -53,5 +70,12 @@ EXPOSE 8080
 # HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
 #   CMD wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/api/auth/health || exit 1
 
-# Lệnh chạy ứng dụng. Spring Boot sẽ tự động đọc các biến môi trường hệ thống.
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -jar app.jar"]
+# Lệnh chạy ứng dụng với Application Insights Java Agent
+# -javaagent: Sử dụng Java Agent để tự động instrument code
+# Agent sẽ tự động track:
+# - HTTP requests (Spring MVC, Servlet)
+# - Exceptions
+# - Dependencies (HTTP calls, JDBC, etc.)
+# - Performance counters
+# - Logs (nếu cấu hình)
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -javaagent:/app/applicationinsights-agent.jar -XX:MaxRAMPercentage=75.0 -XX:+UseContainerSupport -jar app.jar"]

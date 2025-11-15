@@ -35,6 +35,9 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Azure Application Insights - Không cần dependency vì dùng Java Agent -->
+        <!-- Java Agent sẽ tự động instrument code và track requests, exceptions, logs -->
+        <!-- Agent được download và sử dụng trong Dockerfile -->
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

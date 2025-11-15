@@ -204,8 +204,12 @@ public class AuthController {
             if (result.getIdToken() != null) {
                 httpRequest.getSession().setAttribute("id_token", result.getIdToken());
             }
+            
+            log.info("User login successful: {}", response.getUser().getEmail());
+            
             return ResponseEntity.ok(response);
         } else {
+            log.warn("User login failed: {}", response.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
@@ -245,8 +249,13 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(jakarta.servlet.http.HttpServletRequest request) {
-        // Xóa session local
+        // Lấy user info trước khi xóa session
         if (request.getSession() != null) {
+            Object userObj = request.getSession().getAttribute("user");
+            if (userObj instanceof AuthResponse.UserInfo) {
+                log.info("User logout: {}", ((AuthResponse.UserInfo) userObj).getEmail());
+            }
+            // Xóa session local
             request.getSession().invalidate();
             log.info("Local session invalidated");
         }
@@ -283,6 +292,7 @@ public class AuthController {
      */
     @GetMapping("/health")
     public ResponseEntity<String> health() {
+        log.info("Health check endpoint called");
         return ResponseEntity.ok("OpenID Connect Auth API is running");
     }
 
