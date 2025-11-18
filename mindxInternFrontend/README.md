@@ -1,6 +1,6 @@
 # 📂 mindxInternFrontend - React Web Application
 
-Ứng dụng này là giao diện người dùng (User Interface) được xây dựng bằng **React** và **Vite**. Nó chịu trách nhiệm xử lý luồng đăng nhập **OpenID Connect (OIDC)** và tương tác với Backend API để hiển thị dữ liệu.
+Ứng dụng này là giao diện người dùng được xây dựng bằng **React** và **Vite**. Nó chịu trách nhiệm xử lý luồng đăng nhập **OpenID Connect (OIDC)** và tương tác với Backend API.
 
 ---
 
@@ -28,8 +28,6 @@ Tạo file `.env.local` ở thư mục gốc của Frontend với các khóa sau
 | `VITE_API_BASE_URL` | `http://localhost:8080` | Địa chỉ Backend API cục bộ. |
 | `VITE_OPENID_CLIENT_ID` | `mindx-onboarding` | ID định danh client OIDC. |
 | `VITE_FRONTEND_REDIRECT_URI` | `http://localhost:5173/auth/callback` | URI chuyển hướng OIDC cục bộ. |
-
-> ℹ️ *Lưu ý: Không cần thiết lập khóa GA4 (`VITE_GA_TRACKING_ID`) cho môi trường cục bộ trừ khi bạn muốn gửi dữ liệu thử nghiệm.*
 
 ### 2.2. Khởi động Ứng dụng
 
