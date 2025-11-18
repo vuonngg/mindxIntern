@@ -1,8 +1,5 @@
 # 📚 Tài liệu Tổng quan Dự án 
 
-Tài liệu này là Mục lục chính, cung cấp hướng dẫn tổng thể về cách **Cài đặt & Chạy Cục bộ (Local Setup)**, **Quy trình Triển khai (Deployment)**, và **Hệ thống Giám sát (Monitoring)** cho ứng dụng Full-Stack (React/Vite & Spring Boot).
-
----
 
 ## 1. 🛠️ Cài đặt và Khởi động Cục bộ (Local Development Setup)
 
