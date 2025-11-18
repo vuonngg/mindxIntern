@@ -43,10 +43,3 @@ Tạo file `.env.local` ở thư mục gốc của Frontend với các khóa sau
 
 ---
 
-## 📘 3. Tài liệu Chuyên sâu (Docs)
-
-Để biết chi tiết về các Event được theo dõi trên GA4, luồng xác thực và quy trình triển khai lên Azure, vui lòng tham khảo các tài liệu chung của dự án:
-
-* **Tài liệu Dự án Chung (Tổng hợp):** [[Đến Thư mục Docs]](../docs/README.md)
-* **Chi tiết Triển khai Azure và Configs:** [[Xem AZURE_DEPLOYMENT]](../docs/04_AZURE_DEPLOYMENT.md)
-* **Chi tiết Tích hợp Đo lường (GA4):** [[Xem SETUP_GA4]](../docs/02_SETUP_GA4.md)
