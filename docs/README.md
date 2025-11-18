@@ -17,6 +17,16 @@ Mục tiêu cốt lõi của hệ thống là **Xác thực và Quản lý Đị
 | **Giám sát Backend** | **Azure Application Insights** | Giám sát hiệu suất, sự cố, và tính khả dụng của API. |
 
 ---
+
+## 🌐 Link sản phẩm đã hoàn thành
+
+| Mô tả | Công cụ | Liên kết  |
+| :--- | :--- | :--- |
+| **Frontend Deploy** | Azure Web App | **https://anoanofrontend-h3a0gcewdwerbud3.southeastasia-01.azurewebsites.net** |
+| **Giám sát Frontend** | Google Analytics 4 | **https://analytics.google.com/analytics/web/#/a355517496p513043431/realtime/overview?params=_u..nav%3Dmaui%26_r.4..selmet%3D%5B%22activeUsers%22%5D** |
+| **Giám sát Backend** | Azure Application Insights | **https://portal.azure.com/#@mindx.com.vn/resource/subscriptions/f244cdf7-5150-4b10-b3f2-d4bff23c5f45/resourceGroups/vuonghn-rg/providers/microsoft.insights/components/anoanoBackendAI/overview** |
+
+---
 ## 1. 🛠️ Cài đặt và Khởi động Cục bộ (Local Development Setup)
 
 * **Backend API:** [[mindxInternBackend/README.md]](../mindxInternBackend/README.md) (Xem các lệnh `mvn` và `java -jar`)
