@@ -43,10 +43,3 @@ Tạo file `.env` (hoặc đặt các biến môi trường hệ thống) với 
 
 ---
 
-## 📘 3. Tài liệu Chuyên sâu (Docs)
-
-Để biết chi tiết về luồng xác thực, cách triển khai lên Azure và cấu hình giám sát chuyên sâu, vui lòng tham khảo các tài liệu chung của dự án:
-
-* **Tài liệu Dự án Chung (Tổng hợp):** [[Đến Thư mục Docs]](../docs/README.md)
-* **Chi tiết Triển khai Azure và Configs:** [[Xem AZURE_DEPLOYMENT]](../docs/04_AZURE_DEPLOYMENT.md)
-* **Chi tiết Tích hợp Giám sát:** [[Xem APP_INSIGHTS]](../docs/03_SETUP_APP_INSIGHT.md)
