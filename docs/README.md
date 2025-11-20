@@ -2,6 +2,10 @@
 
 Dự án này là một giải pháp **Full-Stack** được xây dựng nhằm thiết lập và vận hành một luồng ứng dụng hoàn chỉnh trong môi trường đám mây.
 
+# 📚 Tài liệu cho config
+
+Dự án này là một giải psadsadháp **Full-Stack** được xây dựng nhằm thiết lập và vận hành một luồng ứng dụng hoàn chỉnh trong môi trường đám mây.
+
 Mục tiêu cốt lõi của hệ thống là **Xác thực và Quản lý Định danh** người dùng thông qua giao thức **OpenID Connect (OIDC)**, tích hợp với dịch vụ **MindX IDP**, đồng thời cung cấp các công cụ cần thiết để duy trì độ tin cậy và hiệu suất cao.
 
 ---
