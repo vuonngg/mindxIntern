@@ -1,20 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { toast } from 'react-toastify';
-import { authService, type UserData } from '../services/authService';
-import { 
-  getAllStudents, 
-  createStudent, 
-  updateStudent, 
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { authService, type UserData } from "../services/authService";
+import {
+  getAllStudents,
+  createStudent,
+  updateStudent,
   deleteStudent,
   type Student,
   AGE_OPTIONS,
-  GENDER_OPTIONS
-} from '../services/studentService';
-import { trackEvent, trackButtonClick } from '../lib/analytics';
-import Header from '../components/Header';
-import './StudentPage.css';
+  GENDER_OPTIONS,
+} from "../services/studentService";
+import { trackEvent, trackButtonClick } from "../lib/analytics";
+import Header from "../components/Header";
+import "./StudentPage.css";
 
 export default function StudentPage() {
   const navigate = useNavigate();
@@ -25,9 +25,9 @@ export default function StudentPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
+    name: "",
     age: 18,
-    gender: 'Nam' as 'Nam' | 'Nữ',
+    gender: "Nam" as "Nam" | "Nữ",
   });
   const listRef = useRef<HTMLDivElement>(null);
   const lastScrollTop = useRef<number>(0);
@@ -36,29 +36,33 @@ export default function StudentPage() {
     const fetchUser = async () => {
       try {
         const authCheck = await authService.checkAuth();
-        
+
         if (!authCheck.success || (!authCheck.data && !authCheck.user)) {
-          navigate('/login', { replace: true });
+          navigate("/login", { replace: true });
           return;
         }
-        
+
         const response = await authService.getCurrentUser();
         if (response.success && (response.data || response.user)) {
           const userData = (response.user || response.data) as UserData;
           setUser(userData);
           setError(null);
-          
+
           trackEvent({
-            category: 'Student',
-            action: 'Page View',
-            label: 'Student Management',
+            category: "Student",
+            action: "Page View",
+            label: "Student Management",
           });
         } else {
-          setError('Không thể lấy thông tin người dùng');
+          setError("Không thể lấy thông tin người dùng");
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Không thể lấy thông tin người dùng');
-        navigate('/login', { replace: true });
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Không thể lấy thông tin người dùng"
+        );
+        navigate("/login", { replace: true });
       } finally {
         setLoading(false);
       }
@@ -70,6 +74,7 @@ export default function StudentPage() {
   useEffect(() => {
     // Load students from service
     setStudents(getAllStudents());
+    console.log("Loaded students from storage");
   }, []);
 
   // Track scroll events
@@ -82,7 +87,7 @@ export default function StudentPage() {
 
     const handleScroll = () => {
       const scrollTop = listElement.scrollTop;
-      const scrollDirection = scrollTop > lastScrollTop.current ? 'down' : 'up';
+      const scrollDirection = scrollTop > lastScrollTop.current ? "down" : "up";
       lastScrollTop.current = scrollTop;
 
       // Track scroll every 100px (throttled)
@@ -91,8 +96,8 @@ export default function StudentPage() {
         const scrollDiff = Math.abs(scrollTop - lastTrackedScroll);
         if (scrollDiff >= 100) {
           trackEvent({
-            category: 'Student',
-            action: 'Scroll',
+            category: "Student",
+            action: "Scroll",
             label: `Student List - ${scrollDirection}`,
             value: Math.floor(scrollTop / 100),
           });
@@ -101,9 +106,9 @@ export default function StudentPage() {
       }, 200);
     };
 
-    listElement.addEventListener('scroll', handleScroll);
+    listElement.addEventListener("scroll", handleScroll);
     return () => {
-      listElement.removeEventListener('scroll', handleScroll);
+      listElement.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeout);
     };
   }, [students]);
@@ -116,15 +121,15 @@ export default function StudentPage() {
         age: student.age,
         gender: student.gender,
       });
-      trackButtonClick('Edit Student Button', 'Student Page');
+      trackButtonClick("Edit Student Button", "Student Page");
     } else {
       setEditingStudent(null);
       setFormData({
-        name: '',
+        name: "",
         age: 18,
-        gender: 'Nam',
+        gender: "Nam",
       });
-      trackButtonClick('Create Student Button', 'Student Page');
+      trackButtonClick("Create Student Button", "Student Page");
     }
     setIsFormOpen(true);
   };
@@ -133,18 +138,18 @@ export default function StudentPage() {
     setIsFormOpen(false);
     setEditingStudent(null);
     setFormData({
-      name: '',
+      name: "",
       age: 18,
-      gender: 'Nam',
+      gender: "Nam",
     });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim()) {
-      toast.warning('Vui lòng nhập tên học sinh', {
-        position: 'top-right',
+      toast.warning("Vui lòng nhập tên học sinh", {
+        position: "top-right",
         autoClose: 3000,
       });
       return;
@@ -156,18 +161,18 @@ export default function StudentPage() {
       if (updated) {
         setStudents(getAllStudents());
         trackEvent({
-          category: 'Student',
-          action: 'Update',
+          category: "Student",
+          action: "Update",
           label: `Student ID: ${updated.id}`,
         });
-        toast.success('Cập nhật học sinh thành công!', {
-          position: 'top-right',
+        toast.success("Cập nhật học sinh thành công!", {
+          position: "top-right",
           autoClose: 3000,
         });
         handleCloseForm();
       } else {
-        toast.error('Không thể cập nhật học sinh. Vui lòng thử lại!', {
-          position: 'top-right',
+        toast.error("Không thể cập nhật học sinh. Vui lòng thử lại!", {
+          position: "top-right",
           autoClose: 3000,
         });
       }
@@ -176,12 +181,12 @@ export default function StudentPage() {
       const newStudent = createStudent(formData);
       setStudents(getAllStudents());
       trackEvent({
-        category: 'Student',
-        action: 'Create',
+        category: "Student",
+        action: "Create",
         label: `Student ID: ${newStudent.id}`,
       });
-      toast.success('Thêm học sinh mới thành công!', {
-        position: 'top-right',
+      toast.success("Thêm học sinh mới thành công!", {
+        position: "top-right",
         autoClose: 3000,
       });
       handleCloseForm();
@@ -189,18 +194,18 @@ export default function StudentPage() {
   };
 
   const handleDelete = async (id: string) => {
-    const student = students.find(s => s.id === id);
-    const studentName = student?.name || 'học sinh này';
-    
+    const student = students.find((s) => s.id === id);
+    const studentName = student?.name || "học sinh này";
+
     const result = await Swal.fire({
-      title: 'Xác nhận xóa',
+      title: "Xác nhận xóa",
       text: `Bạn có chắc chắn muốn xóa học sinh "${studentName}"?`,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Hủy',
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
       reverseButtons: true,
     });
 
@@ -209,17 +214,17 @@ export default function StudentPage() {
       if (deleted) {
         setStudents(getAllStudents());
         trackEvent({
-          category: 'Student',
-          action: 'Delete',
+          category: "Student",
+          action: "Delete",
           label: `Student ID: ${id}`,
         });
-        toast.success('Xóa học sinh thành công!', {
-          position: 'top-right',
+        toast.success("Xóa học sinh thành công!", {
+          position: "top-right",
           autoClose: 3000,
         });
       } else {
-        toast.error('Không thể xóa học sinh. Vui lòng thử lại!', {
-          position: 'top-right',
+        toast.error("Không thể xóa học sinh. Vui lòng thử lại!", {
+          position: "top-right",
           autoClose: 3000,
         });
       }
@@ -249,12 +254,12 @@ export default function StudentPage() {
   return (
     <div className="student-container">
       <Header user={user} />
-      
+
       <main className="student-main">
         <div className="student-content">
           <div className="student-header">
             <h1>Quản lý học sinh</h1>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => handleOpenForm()}
             >
@@ -287,7 +292,10 @@ export default function StudentPage() {
                       <button
                         className="btn btn-edit"
                         onClick={() => {
-                          trackButtonClick('Edit Student Button', 'Student List');
+                          trackButtonClick(
+                            "Edit Student Button",
+                            "Student List"
+                          );
                           handleOpenForm(student);
                         }}
                       >
@@ -296,7 +304,10 @@ export default function StudentPage() {
                       <button
                         className="btn btn-delete"
                         onClick={() => {
-                          trackButtonClick('Delete Student Button', 'Student List');
+                          trackButtonClick(
+                            "Delete Student Button",
+                            "Student List"
+                          );
                           handleDelete(student.id);
                         }}
                       >
@@ -316,11 +327,11 @@ export default function StudentPage() {
         <div className="modal-overlay" onClick={handleCloseForm}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>{editingStudent ? 'Sửa học sinh' : 'Thêm học sinh mới'}</h2>
-              <button 
-                className="modal-close" 
+              <h2>{editingStudent ? "Sửa học sinh" : "Thêm học sinh mới"}</h2>
+              <button
+                className="modal-close"
                 onClick={() => {
-                  trackButtonClick('Close Modal Button', 'Student Form');
+                  trackButtonClick("Close Modal Button", "Student Form");
                   handleCloseForm();
                 }}
               >
@@ -334,7 +345,9 @@ export default function StudentPage() {
                   type="text"
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   placeholder="Nhập tên học sinh"
                   required
                 />
@@ -345,11 +358,15 @@ export default function StudentPage() {
                 <select
                   id="age"
                   value={formData.age}
-                  onChange={(e) => setFormData({ ...formData, age: parseInt(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, age: parseInt(e.target.value) })
+                  }
                   required
                 >
-                  {AGE_OPTIONS.map(age => (
-                    <option key={age} value={age}>{age}</option>
+                  {AGE_OPTIONS.map((age) => (
+                    <option key={age} value={age}>
+                      {age}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -359,34 +376,46 @@ export default function StudentPage() {
                 <select
                   id="gender"
                   value={formData.gender}
-                  onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'Nam' | 'Nữ' })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      gender: e.target.value as "Nam" | "Nữ",
+                    })
+                  }
                   required
                 >
-                  {GENDER_OPTIONS.map(gender => (
-                    <option key={gender} value={gender}>{gender}</option>
+                  {GENDER_OPTIONS.map((gender) => (
+                    <option key={gender} value={gender}>
+                      {gender}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="form-actions">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
+                <button
+                  type="button"
+                  className="btn btn-secondary"
                   onClick={() => {
-                    trackButtonClick('Cancel Form Button', 'Student Form');
+                    trackButtonClick("Cancel Form Button", "Student Form");
                     handleCloseForm();
                   }}
                 >
                   Hủy
                 </button>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary"
                   onClick={() => {
-                    trackButtonClick(editingStudent ? 'Update Submit Button' : 'Create Submit Button', 'Student Form');
+                    trackButtonClick(
+                      editingStudent
+                        ? "Update Submit Button"
+                        : "Create Submit Button",
+                      "Student Form"
+                    );
                   }}
                 >
-                  {editingStudent ? 'Cập nhật' : 'Thêm'}
+                  {editingStudent ? "Cập nhật" : "Thêm"}
                 </button>
               </div>
             </form>
