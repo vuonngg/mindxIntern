@@ -110,7 +110,7 @@ export const authService = {
       console.log("=== getLoginUrl: Response received ===");
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
-      console.log("Response data trả ra về là:", response.data);
+      console.log("Response data trả là:", response.data);
 
       const data = await handleAxiosResponse(response);
       console.log("=== getLoginUrl: Processed data ===");
