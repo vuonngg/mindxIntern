@@ -1,90 +1,66 @@
-/**
- * Student Service - Manages student data (CRUD operations)
- * Currently uses hardcoded data, will be replaced with API calls later
- */
+import axiosInstance from "../lib/axios";
+import { API_BASE_URL } from "../config/apiUrls";
 
 export interface Student {
-  id: string;
+  id: number;
   name: string;
   age: number;
-  gender: 'Nam' | 'Nữ';
+  gender: "NAM" | "NU";
 }
 
-// Hardcoded initial data - 2 sample students
-let students: Student[] = [
-  {
-    id: '1',
-    name: 'Nguyễn Văn A',
-    age: 20,
-    gender: 'Nam',
-  },
-  {
-    id: '2',
-    name: 'Trần Thị B',
-    age: 19,
-    gender: 'Nữ',
-  },
-];
+export type CreateStudentPayload = Omit<Student, "id">;
+export type UpdateStudentPayload = Partial<Omit<Student, "id">>;
+
+const STUDENT_ENDPOINT = `${API_BASE_URL}/api/students`;
 
 // Age options for dropdown (18-30)
 export const AGE_OPTIONS = Array.from({ length: 13 }, (_, i) => i + 18);
 
-// Gender options
-export const GENDER_OPTIONS: ('Nam' | 'Nữ')[] = ['Nam', 'Nữ'];
+// Gender options aligned with backend enum
+export const GENDER_OPTIONS: Student["gender"][] = ["NAM", "NU"];
+
+export const GENDER_LABELS: Record<Student["gender"], string> = {
+  NAM: "Nam",
+  NU: "Nữ",
+};
 
 /**
- * Get all students
+ * Fetch all students from backend
  */
-export function getAllStudents(): Student[] {
-  return [...students];
+export async function getAllStudents(): Promise<Student[]> {
+  const response = await axiosInstance.get<Student[]>(STUDENT_ENDPOINT);
+  return response.data ?? [];
 }
 
 /**
- * Get student by ID
+ * Fetch student by ID
  */
-export function getStudentById(id: string): Student | undefined {
-  return students.find(student => student.id === id);
+export async function getStudentById(id: number): Promise<Student> {
+  const response = await axiosInstance.get<Student>(`${STUDENT_ENDPOINT}/${id}`);
+  return response.data;
 }
 
 /**
  * Create a new student
  */
-export function createStudent(studentData: Omit<Student, 'id'>): Student {
-  const newStudent: Student = {
-    id: Date.now().toString(), // Simple ID generation
-    ...studentData,
-  };
-  students.push(newStudent);
-  return newStudent;
+export async function createStudent(payload: CreateStudentPayload): Promise<void> {
+  await axiosInstance.post(STUDENT_ENDPOINT, payload);
 }
 
 /**
  * Update an existing student
  */
-export function updateStudent(id: string, studentData: Partial<Omit<Student, 'id'>>): Student | null {
-  const index = students.findIndex(student => student.id === id);
-  if (index === -1) {
-    return null;
-  }
-  
-  students[index] = {
-    ...students[index],
-    ...studentData,
-  };
-  
-  return students[index];
+export async function updateStudent(
+  id: number,
+  payload: UpdateStudentPayload
+): Promise<void> {
+  await axiosInstance.put(`${STUDENT_ENDPOINT}/${id}`, payload);
 }
 
 /**
  * Delete a student
  */
-export function deleteStudent(id: string): boolean {
-  const index = students.findIndex(student => student.id === id);
-  if (index === -1) {
-    return false;
-  }
-  
-  students.splice(index, 1);
-  return true;
+export async function deleteStudent(id: number): Promise<void> {
+  await axiosInstance.delete(`${STUDENT_ENDPOINT}/${id}`);
 }
 

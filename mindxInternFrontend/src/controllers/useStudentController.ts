@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import {
   type Student,
   AGE_OPTIONS,
   GENDER_OPTIONS,
+  GENDER_LABELS,
 } from "../models/studentService";
 import { trackEvent } from "../lib/analytics";
 
@@ -31,10 +32,26 @@ export function useStudentController() {
   const [formData, setFormData] = useState<StudentFormState>({
     name: "",
     age: 18,
-    gender: "Nam",
+    gender: "NAM",
   });
   const listRef = useRef<HTMLDivElement>(null);
   const lastScrollTop = useRef<number>(0);
+
+  const refreshStudents = useCallback(async () => {
+    try {
+      const data = await getAllStudents();
+      setStudents(data);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Không thể tải danh sách học sinh. Vui lòng thử lại.";
+      toast.error(message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -76,10 +93,10 @@ export function useStudentController() {
   }, [navigate]);
 
   useEffect(() => {
-    setStudents(getAllStudents());
+    refreshStudents();
     // eslint-disable-next-line no-console
-    console.log("Loaded students from storage");
-  }, []);
+    console.log("Loaded students from backend");
+  }, [refreshStudents]);
 
   useEffect(() => {
     const listElement = listRef.current;
@@ -128,7 +145,7 @@ export function useStudentController() {
       setFormData({
         name: "",
         age: 18,
-        gender: "Nam",
+        gender: "NAM",
       });
     }
     setIsFormOpen(true);
@@ -140,11 +157,11 @@ export function useStudentController() {
     setFormData({
       name: "",
       age: 18,
-      gender: "Nam",
+      gender: "NAM",
     });
   };
 
-  const submitForm = (e: React.FormEvent) => {
+  const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name.trim()) {
@@ -155,43 +172,45 @@ export function useStudentController() {
       return;
     }
 
-    if (editingStudent) {
-      const updated = updateStudent(editingStudent.id, formData);
-      if (updated) {
-        setStudents(getAllStudents());
+    try {
+      if (editingStudent) {
+        await updateStudent(editingStudent.id, formData);
         trackEvent({
           category: "Student",
           action: "Update",
-          label: `Student ID: ${updated.id}`,
+          label: `Student ID: ${editingStudent.id}`,
         });
         toast.success("Cập nhật học sinh thành công!", {
           position: "top-right",
           autoClose: 3000,
         });
-        closeForm();
       } else {
-        toast.error("Không thể cập nhật học sinh. Vui lòng thử lại!", {
+        await createStudent(formData);
+        trackEvent({
+          category: "Student",
+          action: "Create",
+          label: `Student: ${formData.name}`,
+        });
+        toast.success("Thêm học sinh mới thành công!", {
           position: "top-right",
           autoClose: 3000,
         });
       }
-    } else {
-      const newStudent = createStudent(formData);
-      setStudents(getAllStudents());
-      trackEvent({
-        category: "Student",
-        action: "Create",
-        label: `Student ID: ${newStudent.id}`,
-      });
-      toast.success("Thêm học sinh mới thành công!", {
+      await refreshStudents();
+      closeForm();
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Thao tác thất bại. Vui lòng thử lại!";
+      toast.error(message, {
         position: "top-right",
         autoClose: 3000,
       });
-      closeForm();
     }
   };
 
-  const deleteStudentById = async (id: string) => {
+  const deleteStudentById = async (id: number) => {
     const student = students.find((s) => s.id === id);
     const studentName = student?.name || "học sinh này";
 
@@ -207,25 +226,31 @@ export function useStudentController() {
       reverseButtons: true,
     });
 
-    if (result.isConfirmed) {
-      const deleted = deleteStudent(id);
-      if (deleted) {
-        setStudents(getAllStudents());
-        trackEvent({
-          category: "Student",
-          action: "Delete",
-          label: `Student ID: ${id}`,
-        });
-        toast.success("Xóa học sinh thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error("Không thể xóa học sinh. Vui lòng thử lại!", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      await deleteStudent(id);
+      await refreshStudents();
+      trackEvent({
+        category: "Student",
+        action: "Delete",
+        label: `Student ID: ${id}`,
+      });
+      toast.success("Xóa học sinh thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Không thể xóa học sinh. Vui lòng thử lại!";
+      toast.error(message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
@@ -259,6 +284,7 @@ export function useStudentController() {
     handleNameChange,
     handleAgeChange,
     handleGenderChange,
+    genderLabels: GENDER_LABELS,
   };
 }
 

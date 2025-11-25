@@ -22,6 +22,7 @@ export default function StudentPage() {
     handleNameChange,
     handleAgeChange,
     handleGenderChange,
+    genderLabels,
   } = useStudentController();
 
   if (loading) {
@@ -80,7 +81,8 @@ export default function StudentPage() {
                           <strong>Tuổi:</strong> {student.age}
                         </span>
                         <span className="detail-item">
-                          <strong>Giới tính:</strong> {student.gender}
+                          <strong>Giới tính:</strong>{" "}
+                          {genderLabels[student.gender]}
                         </span>
                       </div>
                     </div>
@@ -175,13 +177,13 @@ export default function StudentPage() {
                   id="gender"
                   value={formData.gender}
                   onChange={(e) =>
-                    handleGenderChange(e.target.value as "Nam" | "Nữ")
+                    handleGenderChange(e.target.value as "NAM" | "NU")
                   }
                   required
                 >
                   {genderOptions.map((gender) => (
                     <option key={gender} value={gender}>
-                      {gender}
+                      {genderLabels[gender]}
                     </option>
                   ))}
                 </select>

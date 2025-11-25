@@ -40,7 +40,7 @@ public class PARService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             
-            // Basic Auth với client-id:client-secret
+            // Basic Auth với client-id:client-secr et
             String credentials = clientId + ":" + clientSecret;
             String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
             headers.set("Authorization", "Basic " + encodedCredentials);
