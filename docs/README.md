@@ -52,3 +52,5 @@ Phần này bao gồm toàn bộ quy trình đưa ứng dụng lên Azure Web Ap
 | :--- | :--- | :--- | :--- |
 | **02** | **Setup GA4** | Hướng dẫn tích hợp Google Analytics 4 cho Frontend. Danh sách các **Events** quan trọng được theo dõi. | [[Mở 02_SETUP_GA4]](./02_SETUP_GA4.md) |
 | **03** | **Setup App Insights** | Hướng dẫn tích hợp Azure Application Insights cho Backend. Chi tiết về Java Agent và các quy tắc cảnh báo. | [[Mở 03_SETUP_APP_INSIGHT.md]](./03_SETUP_APP_INSIGHT.md) |
+
+--
