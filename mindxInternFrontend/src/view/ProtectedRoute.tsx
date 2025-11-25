@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { isTokenExpired } from '../services/tokenService';
-import { authService } from '../services/authService';
+import { isTokenExpired } from '../models/tokenService';
+import { authService } from '../models/authService';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -29,7 +29,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         }
       } catch (err) {
         // If backend check fails, also check token
-        const { getToken } = await import('../services/tokenService');
+        const { getToken } = await import('../models/tokenService');
         const tokenData = getToken();
         if (tokenData && !isTokenExpired()) {
           // May be temporary backend issue, allow access

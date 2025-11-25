@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService, type UserData } from '../services/authService';
+import { authService, type UserData } from '../../models/authService';
 import { 
   getAllStudents, 
   createStudent, 
@@ -9,9 +9,9 @@ import {
   type Student,
   AGE_OPTIONS,
   GENDER_OPTIONS
-} from '../services/studentService';
-import { trackEvent, trackButtonClick } from '../lib/analytics';
-import Header from '../components/Header';
+} from '../../models/studentService';
+import { trackEvent, trackButtonClick } from '../../lib/analytics';
+import Header from '../Header';
 import './StudentPage.css';
 
 export default function StudentPage() {

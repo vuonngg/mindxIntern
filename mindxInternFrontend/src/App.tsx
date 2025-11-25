@@ -3,11 +3,11 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { AuthPage } from './pages/AuthPage'
-import StudentPage from './pages/StudentPage'
-import AuthCallbackPage from './pages/AuthCallbackPage'
-import ProtectedRoute from './components/ProtectedRoute'
-import PublicRoute from './components/PublicRoute'
+import { AuthPage } from './view/pages/AuthPage'
+import StudentPage from './view/pages/StudentPage'
+import AuthCallbackPage from './view/pages/AuthCallbackPage'
+import ProtectedRoute from './view/ProtectedRoute'
+import PublicRoute from './view/PublicRoute'
 import { trackPageView, trackNavigation } from './lib/analytics'
 
 // Component to track page views

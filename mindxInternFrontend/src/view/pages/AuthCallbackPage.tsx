@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/authService';
-import { FRONTEND_REDIRECT_URI } from '../config/apiUrls';
-import { trackLogin, trackEvent } from '../lib/analytics';
+import { authService } from '../../models/authService';
+import { FRONTEND_REDIRECT_URI } from '../../config/apiUrls';
+import { trackLogin, trackEvent } from '../../lib/analytics';
 import './AuthPage.css';
 
 export default function AuthCallbackPage() {
@@ -62,7 +62,7 @@ export default function AuthCallbackPage() {
             sessionStorage.removeItem('logoutInProgress');
             
             // Step 2: Clear frontend session (token, localStorage, cookies)
-            const { clearToken } = await import('../services/tokenService');
+            const { clearToken } = await import('../../models/tokenService');
             clearToken();
             localStorage.clear();
             

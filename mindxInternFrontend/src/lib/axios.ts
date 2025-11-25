@@ -3,7 +3,7 @@
  */
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { getTokenString, isTokenExpired, clearToken } from '../services/tokenService';
+import { getTokenString, isTokenExpired, clearToken } from '../models/tokenService';
 
 // Create axios instance
 const axiosInstance: AxiosInstance = axios.create({
@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
     
     if (token && typeof token === 'string') {
       // Import and save token synchronously to ensure it's saved before redirect
-      const { saveToken } = await import('../services/tokenService');
+      const { saveToken } = await import('../models/tokenService');
       saveToken(token);
     }
 

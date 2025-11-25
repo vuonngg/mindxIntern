@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService, type UserData } from '../services/authService';
-import { clearToken } from '../services/tokenService';
+import { authService, type UserData } from '../models/authService';
+import { clearToken } from '../models/tokenService';
 import { trackButtonClick, trackLogout } from '../lib/analytics';
 import './Header.css';
 

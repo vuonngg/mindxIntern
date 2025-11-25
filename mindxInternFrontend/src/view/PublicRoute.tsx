@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { isTokenExpired } from '../services/tokenService';
-import { authService } from '../services/authService';
+import { isTokenExpired } from '../models/tokenService';
+import { authService } from '../models/authService';
 
 interface PublicRouteProps {
   children: React.ReactNode;
@@ -53,7 +53,7 @@ export default function PublicRoute({ children }: PublicRouteProps) {
         }
         
         // Backend says not authenticated, also check token as fallback
-        const { getToken } = await import('../services/tokenService');
+        const { getToken } = await import('../models/tokenService');
         const tokenData = getToken();
         if (tokenData && !isTokenExpired()) {
           // Token exists and valid, user is authenticated (even if backend check failed)
@@ -64,7 +64,7 @@ export default function PublicRoute({ children }: PublicRouteProps) {
         }
       } catch (err) {
         // Backend check failed, check token as fallback
-        const { getToken } = await import('../services/tokenService');
+        const { getToken } = await import('../models/tokenService');
         const tokenData = getToken();
         if (tokenData && !isTokenExpired()) {
           // Token exists and valid, assume authenticated (may be temporary backend issue)
